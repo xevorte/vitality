@@ -1,0 +1,24 @@
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["react-native", "jest", "node", "reactotron-react-native"],
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./src/*"],
+      "api/*": ["./src/api/*"],
+      "components/*": ["./src/components/*"],
+      "config/*": ["./src/config/*"],
+      "helper/*": ["./src/helper/*"],
+      "images/*": ["./src/images/*"],
+      "models/*": ["./src/models/*"],
+      "modules/*": ["./src/modules/*"],
+      "screens/*": ["./src/screens/*"],
+      "services/*": ["./src/services/*"],
+      "stores/*": ["./src/stores/*"],
+      "themes/*": ["./src/themes/*"],
+      "const/*": ["./src/const/*"],
+      "utils/*": ["./src/utils/*"]
+    }
+  }
+}
