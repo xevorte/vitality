@@ -1,0 +1,563 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Food Nutrition API",
+    "description": "Real-time food nutrition prediction with MVC architecture",
+    "version": "3.0.0"
+  },
+  "paths": {
+    "/predict/": {
+      "post": {
+        "tags": ["Prediction"],
+        "summary": "Predict",
+        "description": "Single image prediction via REST.\n\nUpload a food image and get nutrition prediction (calories, fat, carbs, protein).",
+        "operationId": "predictFood",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/BodyPredict"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Register",
+        "description": "Register a new user.",
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login",
+        "description": "Login user with username and password.",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/validateSession": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Validate Session",
+        "description": "Validasi session token user.\n\nData yang dibutuhkan:\n- username\n- session_token",
+        "operationId": "validateSession",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get Profile",
+        "description": "Get user profile by ID.",
+        "operationId": "getUserProfile",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Edit Profile",
+        "description": "Edit user profile. Semua field optional.",
+        "operationId": "updateUserProfile",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Logout",
+        "description": "Logout user — clear session token.",
+        "operationId": "logoutUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "getRoot",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivityLevelEnum": {
+        "type": "string",
+        "enum": ["sangat_jarang", "ringan", "sedang", "berat", "atlet"],
+        "title": "ActivityLevelEnum"
+      },
+      "ApiResponse": {
+        "type": "object",
+        "required": ["status", "message"],
+        "properties": {
+          "status": {
+            "type": "integer",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "data": {
+            "anyOf": [
+              { "type": "object" },
+              { "type": "null" }
+            ],
+            "title": "Data"
+          }
+        },
+        "title": "ApiResponse"
+      },
+      "BodyPredict": {
+        "type": "object",
+        "required": ["file"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "title": "BodyPredict"
+      },
+      "GenderEnum": {
+        "type": "string",
+        "enum": ["pria", "wanita"],
+        "title": "GenderEnum"
+      },
+      "HTTPValidationError": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail"
+          }
+        },
+        "title": "HTTPValidationError"
+      },
+      "HealthGoalEnum": {
+        "type": "string",
+        "enum": ["turunkan_berat_badan", "tambah_masa_otot", "menjaga_kesehatan"],
+        "title": "HealthGoalEnum"
+      },
+      "LogoutRequest": {
+        "type": "object",
+        "required": ["session_token"],
+        "properties": {
+          "session_token": {
+            "type": "string",
+            "title": "Session Token"
+          }
+        },
+        "title": "LogoutRequest"
+      },
+      "NutritionResponse": {
+        "type": "object",
+        "required": ["calories", "fat_g", "carb_g", "protein_g"],
+        "properties": {
+          "calories": {
+            "type": "number",
+            "title": "Calories"
+          },
+          "fat_g": {
+            "type": "number",
+            "title": "Fat G"
+          },
+          "carb_g": {
+            "type": "number",
+            "title": "Carb G"
+          },
+          "protein_g": {
+            "type": "number",
+            "title": "Protein G"
+          }
+        },
+        "title": "NutritionResponse"
+      },
+      "UserLoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "title": "UserLoginRequest"
+      },
+      "UserRegisterRequest": {
+        "type": "object",
+        "required": ["name", "username", "password", "gender", "height_cm", "weight_kg", "age", "health_goal", "activity_level"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "gender": {
+            "$ref": "#/components/schemas/GenderEnum"
+          },
+          "height_cm": {
+            "type": "number",
+            "title": "Height Cm"
+          },
+          "weight_kg": {
+            "type": "number",
+            "title": "Weight Kg"
+          },
+          "age": {
+            "type": "integer",
+            "title": "Age"
+          },
+          "health_goal": {
+            "$ref": "#/components/schemas/HealthGoalEnum"
+          },
+          "activity_level": {
+            "$ref": "#/components/schemas/ActivityLevelEnum"
+          }
+        },
+        "title": "UserRegisterRequest"
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          },
+          "password": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Password"
+          },
+          "gender": {
+            "anyOf": [{ "$ref": "#/components/schemas/GenderEnum" }, { "type": "null" }]
+          },
+          "height_cm": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Height Cm"
+          },
+          "weight_kg": {
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "title": "Weight Kg"
+          },
+          "age": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Age"
+          },
+          "health_goal": {
+            "anyOf": [{ "$ref": "#/components/schemas/HealthGoalEnum" }, { "type": "null" }]
+          },
+          "activity_level": {
+            "anyOf": [{ "$ref": "#/components/schemas/ActivityLevelEnum" }, { "type": "null" }]
+          }
+        },
+        "title": "UserUpdateRequest"
+      },
+      "ValidateSessionRequest": {
+        "type": "object",
+        "required": ["username", "session_token"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "session_token": {
+            "type": "string",
+            "title": "Session Token"
+          }
+        },
+        "title": "ValidateSessionRequest"
+      },
+      "ValidationError": {
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "properties": {
+          "loc": {
+            "type": "array",
+            "items": {
+              "anyOf": [{ "type": "string" }, { "type": "integer" }]
+            },
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "title": "ValidationError"
+      }
+    }
+  }
+}

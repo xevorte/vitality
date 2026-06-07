@@ -10,7 +10,7 @@ type PropsText = {
   style?: TextStyle;
   numberOfLines?: number;
   size?: number;
-  type: 'thin' | 'regular' | 'semibold' | 'bold' | 'medium';
+  type?: 'regular' | 'semibold' | 'bold' | 'medium';
   textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify' | undefined;
   [key: string]: any;
   maxWidth?: DimensionValue;
@@ -33,9 +33,6 @@ const Text = ({
   onPress,
 }: PropsText) => {
   const fontFamily = (): string => {
-    if (type === 'thin') {
-      return Fonts.thin;
-    }
     if (type === 'bold') {
       return Fonts.bold;
     }
@@ -57,7 +54,7 @@ const Text = ({
         style !== undefined && style,
         {
           fontFamily: fontFamily(),
-          fontSize: size ? size : scale(14),
+          fontSize: size ? size : scale(16),
           color: color ? color : '8CA9FF',
         },
         textAlign !== undefined && { textAlign },

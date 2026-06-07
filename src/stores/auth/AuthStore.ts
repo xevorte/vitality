@@ -8,7 +8,16 @@ import {StateCreator} from 'zustand/vanilla';
 import AuthAction from './AuthActions';
 const InitialStore = {
   isLogin: false,
+  registerData: {
+    name: "",
+    username: "",
+    password: "",
+    height_cm: NaN,
+    weight_kg: NaN,
+    age: NaN,
+  },
   token: undefined,
+  refreshToken: undefined,
 };
 
 const authStore: StateCreator<AuthModel> = (set, get) => ({
