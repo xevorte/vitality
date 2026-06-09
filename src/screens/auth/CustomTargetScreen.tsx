@@ -26,7 +26,7 @@ export default function CustomTargetScreen() {
 
         <View className="flex-row items-center justify-between mb-8">
           <View className="w-8" /> 
-          <Image source={Logo} className="w-[102px]" resizeMode='contain' />
+          <Image source={Logo} className="w-36 h-14" resizeMode='contain' />
           <View className="w-8" /> 
         </View>
 
@@ -164,7 +164,7 @@ export default function CustomTargetScreen() {
           </View>
         </View>
 
-        <TouchableOpacity className="w-full bg-[#006C49] py-4 rounded-xl flex-row items-center justify-center shadow-sm" onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep4Screen, {})}>
+        <TouchableOpacity className="w-full bg-primary py-4 rounded-xl flex-row items-center justify-center shadow-sm" onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep4Screen, {})}>
           <Text className="text-white font-bold text-base mr-2">Simpan Target</Text>
           <Text className="text-white text-lg">💾</Text>
         </TouchableOpacity>

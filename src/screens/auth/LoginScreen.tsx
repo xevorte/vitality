@@ -1,10 +1,11 @@
-import Text from 'components/CustomText';
 import { View, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, useWindowDimensions } from 'react-native';
-import NavigationServices from 'services/NavigationServices';
+import { UserLoginRequest } from 'api/generated/models/vitality';
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
 import { useAuthStore } from 'stores/auth/AuthStore';
 import { useState } from 'react';
-import { UserLoginRequest } from 'api/generated/models/vitality';
+import { Alert } from 'react-native';
+import NavigationServices from 'services/NavigationServices';
+import Text from 'components/CustomText';
 
 export default function LoginScreen() {
   const { width } = useWindowDimensions();
@@ -16,7 +17,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     const res: any = await login({
-      username: formData.sales_id,
+      username: formData.username,
       password: formData.password,
     });
 
@@ -35,7 +36,7 @@ export default function LoginScreen() {
     <SafeAreaView className="flex-1 bg-[#F5F8F9]">
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1 justify-center items-center"
+        className="h-screen justify-center items-center"
       >
         <View style={{ width: width > 400 ? 400 : '100%' }} className="items-center p-3">
           <View className="w-16 h-16 bg-[#10B981] rounded-2xl justify-center items-center mb-6 shadow-sm">
@@ -55,10 +56,10 @@ export default function LoginScreen() {
                 Username
               </Text>
               <View className="w-full bg-[#F2F3FF] rounded-xl px-4 py-3">
-                <TextInput 
+                <TextInput
                   placeholder="Username Anda"
                   placeholderTextColor="#A0AEC0"
-                  className="text-base text-gray-800"
+                  className="w-full text-base text-gray-800"
                   autoCapitalize="none"
                   value={formData?.username}
                   onChangeText={(value) => setFormData({ ...formData, username: value })}
@@ -75,14 +76,14 @@ export default function LoginScreen() {
                   placeholder="••••••••"
                   placeholderTextColor="#A0AEC0"
                   secureTextEntry
-                  className="flex-1 text-base text-gray-800"
+                  className="w-full flex-1 text-base text-gray-800"
                   value={formData?.password}
                   onChangeText={(value) => setFormData({ ...formData, password: value })}
                 />
               </View>
             </View>
 
-            <TouchableOpacity className="w-full bg-[#10B981] rounded-xl py-4 flex-row justify-center items-center">
+            <TouchableOpacity className="w-full bg-primary rounded-xl py-4 flex-row justify-center items-center" onPress={handleLogin}>
               <Text type={'bold'} className="!text-white mr-2">
                 Masuk
               </Text>

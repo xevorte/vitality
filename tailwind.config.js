@@ -25,7 +25,7 @@ module.exports = {
       fontFamily: {
         'inter-regular': ['Inter-Regular'],
         'inter-medium': ['Inter-Medium'],
-        'inter-semibold': ['Inter-Semibold'],
+        'inter-semibold': ['Inter-SemiBold'],
         'inter-bold': ['Inter-Bold'],
         sans: ['Inter-Regular'],
       },

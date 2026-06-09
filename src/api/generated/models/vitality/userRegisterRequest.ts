@@ -10,13 +10,20 @@ import type { GenderEnum } from './genderEnum';
 import type { HealthGoalEnum } from './healthGoalEnum';
 
 export interface UserRegisterRequest {
+  /** @minLength 1 */
   name: string;
+  /** @minLength 1 */
   username: string;
+  /** @minLength 1 */
   password: string;
   gender?: GenderEnum;
+  /** @exclusiveMinimum 0 */
   height_cm: number;
+  /** @exclusiveMinimum 0 */
   weight_kg: number;
+  /** @exclusiveMinimum 0 */
   age: number;
   health_goal?: HealthGoalEnum;
   activity_level?: ActivityLevelEnum;
+  nutrition?: unknown | null;
 }

@@ -2,30 +2,32 @@ import Config from 'react-native-config';
 
 import apisauce, {ApiResponse, ApisauceInstance, HEADERS} from 'apisauce';
 import { AxiosRequestConfig } from 'axios';
-import { useSessionStore } from 'stores/session/SessionStore';
+import { useAuthStore } from 'stores/auth/AuthStore';
 
 class ApiService {
   api: ApisauceInstance;
   constructor() {
-    const baseUrl = Config.BASE_URL;
+    const baseUrl = Config.BASE_URL || 'http://localhost:8000';
+
     this.api = apisauce.create({
       baseURL: baseUrl,
       headers: {
         'Cache-Control': 'no-cache',
-        Authorization: useSessionStore.getState()?.token
-          ? `Bearer ${useSessionStore.getState()?.token}`
-          : '',
       },
       timeout: 30000,
     });
-    this.api = apisauce.create({
-      baseURL: `${Config.KEYCLOACK_URL}realms/${Config.KEYCLOAK_REALM}/protocol/openid-connect/`,
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Accept: 'application/x-www-form-urlencoded',
-      },
-      timeout: 30000,
+
+    this.api.addRequestTransform((request) => {
+      const token = useAuthStore.getState()?.token;
+
+      if (token) {
+        request.headers = {
+          ...(request.headers || {}),
+          Authorization: `Bearer ${token}`,
+        };
+      } else {
+        delete request.headers?.Authorization;
+      }
     });
 
     this.setHeaders = this.setHeaders.bind(this);
@@ -45,14 +47,14 @@ class ApiService {
 
           const newAccessToken = refreshResponse.data.access_token;
           const newRefreshToken = refreshResponse.data.refresh_token;
-          useSessionStore.getState().setToken(newAccessToken);
-          useSessionStore.getState().setRefreshToken(newRefreshToken);
+          useAuthStore.getState().setToken(newAccessToken);
+          useAuthStore.getState().setRefreshToken(newRefreshToken);
           originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           console.tron.log(this.api, 'api refresh token');
           return this.api.any(originalRequest as AxiosRequestConfig<any>);
         } catch (error) {
           console.tron.log(error, 'error refresh token');
-          useSessionStore.getState().logout();
+          useAuthStore.getState().logout();
         }
         break;
       default:

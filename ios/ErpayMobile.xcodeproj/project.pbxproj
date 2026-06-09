@@ -15,7 +15,7 @@
 		F867B22C743B4291AB6C3749 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A2A8AF6D180452DBBB595B8 /* Lato-Bold.ttf */; };
 		43263FC965504DD59A5E39E3 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3A2A5D97C854A188FC0C2C0 /* Lato-Medium.ttf */; };
 		2FF7D1FB04784459BDC1C6C5 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A7CC4CAC82244D682F7CF9F /* Lato-Regular.ttf */; };
-		8D3F947BC3B14BD0B9829514 /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDFB1A1CC26F41A7A11BC2CD /* Lato-Semibold.ttf */; };
+		8D3F947BC3B14BD0B9829514 /* Lato-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDFB1A1CC26F41A7A11BC2CD /* Lato-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +32,7 @@
 		1A2A8AF6D180452DBBB595B8 /* Lato-Bold.ttf */ = {isa = PBXFileReference; name = "Lato-Bold.ttf"; path = "../assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		C3A2A5D97C854A188FC0C2C0 /* Lato-Medium.ttf */ = {isa = PBXFileReference; name = "Lato-Medium.ttf"; path = "../assets/fonts/Lato-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7A7CC4CAC82244D682F7CF9F /* Lato-Regular.ttf */ = {isa = PBXFileReference; name = "Lato-Regular.ttf"; path = "../assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DDFB1A1CC26F41A7A11BC2CD /* Lato-Semibold.ttf */ = {isa = PBXFileReference; name = "Lato-Semibold.ttf"; path = "../assets/fonts/Lato-Semibold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DDFB1A1CC26F41A7A11BC2CD /* Lato-SemiBold.ttf */ = {isa = PBXFileReference; name = "Lato-SemiBold.ttf"; path = "../assets/fonts/Lato-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +113,7 @@
 				1A2A8AF6D180452DBBB595B8 /* Lato-Bold.ttf */,
 				C3A2A5D97C854A188FC0C2C0 /* Lato-Medium.ttf */,
 				7A7CC4CAC82244D682F7CF9F /* Lato-Regular.ttf */,
-				DDFB1A1CC26F41A7A11BC2CD /* Lato-Semibold.ttf */,
+				DDFB1A1CC26F41A7A11BC2CD /* Lato-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -185,7 +185,7 @@
 				F867B22C743B4291AB6C3749 /* Lato-Bold.ttf in Resources */,
 				43263FC965504DD59A5E39E3 /* Lato-Medium.ttf in Resources */,
 				2FF7D1FB04784459BDC1C6C5 /* Lato-Regular.ttf in Resources */,
-				8D3F947BC3B14BD0B9829514 /* Lato-Semibold.ttf in Resources */,
+				8D3F947BC3B14BD0B9829514 /* Lato-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

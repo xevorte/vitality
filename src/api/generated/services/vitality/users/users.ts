@@ -7,7 +7,7 @@
  */
 import type {
   ApiResponse,
-  LogoutRequest,
+  ChangePasswordRequest,
   UserLoginRequest,
   UserRegisterRequest,
   UserUpdateRequest,
@@ -25,7 +25,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * Register a new user.
  * @summary Register
  */
-export const registerUser = (
+export const registerUsersRegisterPost = (
     userRegisterRequest: BodyType<UserRegisterRequest>,
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
@@ -39,7 +39,7 @@ export const registerUser = (
  * Login user with username and password.
  * @summary Login
  */
-export const loginUser = (
+export const loginUsersLoginPost = (
     userLoginRequest: BodyType<UserLoginRequest>,
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
@@ -50,14 +50,14 @@ export const loginUser = (
       options);
     }
   /**
- * Validasi session token user.
+ * Validate user session token.
  *
- * Data yang dibutuhkan:
+ * Required fields:
  * - username
  * - session_token
  * @summary Validate Session
  */
-export const validateSession = (
+export const validateSessionUsersValidateSessionPost = (
     validateSessionRequest: BodyType<ValidateSessionRequest>,
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
@@ -68,27 +68,31 @@ export const validateSession = (
       options);
     }
   /**
- * Get user profile by ID.
+ * Get current logged-in user profile.
+ *
+ * Header: Authorization: Bearer <session_token>
  * @summary Get Profile
  */
-export const getUserProfile = (
-    userId: number,
+export const getProfileUsersMeGet = (
+
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
-      {url: `/users/${userId}`, method: 'GET'
+      {url: `/users/me`, method: 'GET'
     },
       options);
     }
   /**
- * Edit user profile. Semua field optional.
+ * Edit current logged-in user profile.
+ *
+ * Header: Authorization: Bearer <session_token>
+ * All fields are optional — send only fields you want to update.
  * @summary Edit Profile
  */
-export const updateUserProfile = (
-    userId: number,
+export const editProfileUsersMePut = (
     userUpdateRequest: BodyType<UserUpdateRequest>,
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
-      {url: `/users/${userId}`, method: 'PUT',
+      {url: `/users/me`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
       data: userUpdateRequest
     },
@@ -96,21 +100,40 @@ export const updateUserProfile = (
     }
   /**
  * Logout user — clear session token.
+ *
+ * Header: Authorization: Bearer <session_token>
  * @summary Logout
  */
-export const logoutUser = (
-    logoutRequest: BodyType<LogoutRequest>,
+export const logoutUsersLogoutPost = (
+
  options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
       return vitalityServiceRequest<ApiResponse>(
-      {url: `/users/logout`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: logoutRequest
+      {url: `/users/logout`, method: 'POST'
     },
       options);
     }
-export type RegisterUserResult = NonNullable<Awaited<ReturnType<typeof registerUser>>>
-export type LoginUserResult = NonNullable<Awaited<ReturnType<typeof loginUser>>>
-export type ValidateSessionResult = NonNullable<Awaited<ReturnType<typeof validateSession>>>
-export type GetUserProfileResult = NonNullable<Awaited<ReturnType<typeof getUserProfile>>>
-export type UpdateUserProfileResult = NonNullable<Awaited<ReturnType<typeof updateUserProfile>>>
-export type LogoutUserResult = NonNullable<Awaited<ReturnType<typeof logoutUser>>>
+  /**
+ * Change password for the logged-in user.
+ *
+ * Requires the correct old password.
+ *
+ * Header: Authorization: Bearer <session_token>
+ * @summary Change User Password
+ */
+export const changeUserPasswordUsersMePasswordPut = (
+    changePasswordRequest: BodyType<ChangePasswordRequest>,
+ options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {
+      return vitalityServiceRequest<ApiResponse>(
+      {url: `/users/me/password`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: changePasswordRequest
+    },
+      options);
+    }
+  export type RegisterUsersRegisterPostResult = NonNullable<Awaited<ReturnType<typeof registerUsersRegisterPost>>>
+export type LoginUsersLoginPostResult = NonNullable<Awaited<ReturnType<typeof loginUsersLoginPost>>>
+export type ValidateSessionUsersValidateSessionPostResult = NonNullable<Awaited<ReturnType<typeof validateSessionUsersValidateSessionPost>>>
+export type GetProfileUsersMeGetResult = NonNullable<Awaited<ReturnType<typeof getProfileUsersMeGet>>>
+export type EditProfileUsersMePutResult = NonNullable<Awaited<ReturnType<typeof editProfileUsersMePut>>>
+export type LogoutUsersLogoutPostResult = NonNullable<Awaited<ReturnType<typeof logoutUsersLogoutPost>>>
+export type ChangeUserPasswordUsersMePasswordPutResult = NonNullable<Awaited<ReturnType<typeof changeUserPasswordUsersMePasswordPut>>>

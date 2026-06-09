@@ -4177,6 +4177,16 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
+date-fns-tz@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-3.2.0.tgz#647dc56d38ac33a3e37b65e9d5c4cda5af5e58e6"
+  integrity sha512-sg8HqoTEulcbbbVXeg84u5UnlsQa8GS5QXMqjjYIhS4abEVVKIUwe0/l/UhrZdKaL/W5eWZNlbTeEIiOXTcsBQ==
+
+date-fns@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.4.0.tgz#806539edf45c616b2b76b5f78b88c56ed3c7e036"
+  integrity sha512-+1UMbeh68lH1SegH83CGWwpb6OHHbpSgr3+s5Eww5M4CAgswBpoWS0AjTOfEJ33HiYKz1hdj/KTFprzXHmq/6w==
+
 dayjs@^1.8.15:
   version "1.11.20"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.20.tgz#88d919fd639dc991415da5f4cb6f1b6650811938"
@@ -7958,6 +7968,11 @@ react-native-mmkv@^4.3.0:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-4.3.0.tgz#dbb2817b75270194dd231b4290d3c834f7d6d417"
   integrity sha512-D1wB2ViMrm+0rs7FcbLoct/BV+qugASi+XAZT8MzXy5yl0CI0qxToh2LPnw9UENHrNefpfDZgE5FpMhIB37I5Q==
 
+react-native-nitro-image@^0.15.1:
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-image/-/react-native-nitro-image-0.15.1.tgz#afe8aeea82fe763ec5d74467156a4b4a70657042"
+  integrity sha512-slrImfUgasAdzylTiNWuTkawE0R4t7LGh+7N2VFa/D9+SxlQbkKYp1J6hA3XkkEnTnUCKaea39ZVg+1xx665MQ==
+
 react-native-nitro-modules@^0.35.2:
   version "0.35.2"
   resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.35.2.tgz#75fbcd42a73d93540c0069d42098d9dc6c12ea7e"
@@ -8015,6 +8030,11 @@ react-native-vector-icons@^10.3.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-vision-camera@^5.0.11:
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-5.0.11.tgz#e9b3205b9f162f82c190c5034dd7bfd1a7bba918"
+  integrity sha512-7d8KYemov5k7TciBeR+ICzvEvApMgjrxNHW9EiCHWVQ8A65Qkx2NCDNhYmS00tzWDPQNGKSNWPKuAj2DwjqdmA==
 
 react-native-worklets@^0.8.3:
   version "0.8.3"

@@ -10,6 +10,6 @@ export type GenderEnum = typeof GenderEnum[keyof typeof GenderEnum];
 
 
 export const GenderEnum = {
-  pria: 'pria',
-  wanita: 'wanita',
+  male: 'male',
+  female: 'female',
 } as const;

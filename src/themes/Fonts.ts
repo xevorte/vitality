@@ -1,6 +1,6 @@
 export const Fonts = {
   bold: 'Inter-Bold',
-  semi: 'Inter-Semibold',
+  semibold: 'Inter-SemiBold',
   medium: 'Inter-Medium',
   normal: 'Inter-Regular',
 };

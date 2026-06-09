@@ -1,14 +1,13 @@
-import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import NavigationServices from 'services/NavigationServices';
-import {useAuthStore} from 'stores/auth/AuthStore';
 
 import AuthNavigation from './AuthNavigation';
 import MainNavigation from './MainNavigation';
+import { useAuthStore } from 'stores/auth/AuthStore';
 
 const RootNavigation = () => {
-  const {isLogin} = useAuthStore();
+  const { isLogin } = useAuthStore();
 
   return (
     <NavigationContainer ref={r => NavigationServices.setInstance(r)}>

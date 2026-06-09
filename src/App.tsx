@@ -1,7 +1,11 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { setDefaultOptions } from 'date-fns';
+import { StyleSheet } from 'react-native';
+import { id } from 'date-fns/locale';
 
 import RootNavigation from 'navigation/RootNavigation';
+
+setDefaultOptions({ locale: id });
 
 const App = () => {
   return <RootNavigation />;

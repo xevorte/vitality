@@ -1,14 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-const ScanScreen = () => {
+const ScanDetailScreen = () => {
   return (
     <View>
-      <Text>ScanScreen</Text>
+      <Text>ScanDetailScreen</Text>
     </View>
   );
 };
 
-export default ScanScreen;
+export default ScanDetailScreen;
 
 const styles = StyleSheet.create({});

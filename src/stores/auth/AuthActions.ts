@@ -1,9 +1,10 @@
 import { UserLoginRequest, UserRegisterRequest } from 'api/generated/models/vitality';
-import { loginUser, registerUser } from 'api/generated/services/vitality/users/users';
+import { loginUsersLoginPost, registerUsersRegisterPost } from 'api/generated/services/vitality/users/users';
 import { produce } from 'immer';
 import AuthModel from 'models/AuthModel';
 import ApiServices from 'services/ApiServices';
 import LoadingHelper from 'services/LoadingHelper';
+import { useSessionStore } from 'stores/session/SessionStore';
 
 const AuthAction = (
   set: (newState: AuthModel | ((prevState: AuthModel) => AuthModel)) => void,
@@ -13,47 +14,48 @@ const AuthAction = (
       try {
         LoadingHelper.show();
 
-        const res = await loginUser(params);
+        const res: any = await loginUsersLoginPost(params);
 
         if (res?.ok) {
+          console.log(res);
+          const { setProfile } = useSessionStore.getState();
+
           ApiServices.setHeaders({
-            Authorization: `Bearer ${res?.data?.access_token || ''}`,
+            Authorization: `Bearer ${res?.data?.data?.session_token || ''}`,
           });
 
-          actions.setRefreshToken(res?.data?.refresh_token || '');
-          actions.setToken(res?.data?.access_token || '');
+          actions.setRefreshToken(res?.data?.data?.session_token || '');
+          actions.setToken(res?.data?.data?.session_token || '');
           actions.setIsLogin(true);
+          setProfile(res?.data?.data?.user);
 
           return res;
-        } else {
-          throw res;
         }
+
+        throw res;
       } catch (error) {
         console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
       }
     },
     register: async (params: UserRegisterRequest) => {
       try {
         LoadingHelper.show();
 
-        const res = await registerUser(params);
+        const res = await registerUsersRegisterPost(params);
 
         if (res?.ok) {
-          actions.setRegisterData({
-            name: "",
-            username: "",
-            password: "",
-            height_cm: NaN,
-            weight_kg: NaN,
-            age: NaN,
-          });
-
           return res;
-        } else {
-          throw res;
         }
+
+        throw res;
       } catch (error) {
         console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
       }
     },
     setIsLogin: (isLogin: boolean) => {
@@ -81,6 +83,29 @@ const AuthAction = (
       set(
         produce((state: AuthModel) => {
           state.registerData = registerData;
+        }),
+      );
+    },
+    resetRegisterData: () => {
+      set(
+        produce((state: AuthModel) => {
+          state.registerData = {
+            name: "",
+            username: "",
+            password: "",
+            height_cm: NaN,
+            weight_kg: NaN,
+            age: NaN,
+          };
+        }),
+      );
+    },
+    logout: () => {
+      set(
+        produce((state: AuthModel) => {
+          state.token = undefined;
+          state.refreshToken = undefined;
+          state.isLogin = false;
         }),
       );
     },

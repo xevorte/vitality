@@ -6,8 +6,8 @@
  * OpenAPI spec version: 3.0.0
  */
 import type {
-  BodyPredict,
-  NutritionResponse
+  ApiResponse,
+  BodyPredictPredictPost
 } from '../../../models/vitality';
 
 import { vitalityServiceRequest } from '../../../../utils/vitality-service-request';
@@ -20,19 +20,22 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
   /**
  * Single image prediction via REST.
  *
+ * 1. Validates image contains food using YOLO
+ * 2. If food detected, runs nutrition prediction model
+ *
  * Upload a food image and get nutrition prediction (calories, fat, carbs, protein).
  * @summary Predict
  */
-export const predictFood = (
-    bodyPredict: BodyType<BodyPredict>,
- options?: SecondParameter<typeof vitalityServiceRequest<NutritionResponse>>,) => {const formData = new FormData();
-formData.append(`file`, bodyPredict.file);
+export const predictPredictPost = (
+    bodyPredictPredictPost: BodyType<BodyPredictPredictPost>,
+ options?: SecondParameter<typeof vitalityServiceRequest<ApiResponse>>,) => {const formData = new FormData();
+formData.append(`file`, bodyPredictPredictPost.file);
 
-      return vitalityServiceRequest<NutritionResponse>(
+      return vitalityServiceRequest<ApiResponse>(
       {url: `/predict/`, method: 'POST',
       headers: {'Content-Type': 'multipart/form-data', },
        data: formData
     },
       options);
     }
-  export type PredictFoodResult = NonNullable<Awaited<ReturnType<typeof predictFood>>>
+  export type PredictPredictPostResult = NonNullable<Awaited<ReturnType<typeof predictPredictPost>>>

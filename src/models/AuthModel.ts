@@ -12,6 +12,8 @@ interface AuthModel extends StoreModel {
   setToken: (token: string) => void;
   setRefreshToken: (token: string) => void;
   setRegisterData: (data: UserRegisterRequest) => void;
+  resetRegisterData: () => void;
+  logout: () => void;
 }
 
 export default AuthModel;

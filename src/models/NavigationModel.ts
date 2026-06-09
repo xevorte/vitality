@@ -12,4 +12,13 @@ export type AuthStackParams = {
 
 export type MainStackParams = {
   HomeScreen?: object;
+  GoalDetailScreen?: object;
+  ScanScreen?: object;
+  ScanDetailScreen?: object;
+  JournalScreen?: object;
+  JournalDetailScreen?: object;
+  StatisticScreen?: object;
+  ProfileScreen?: object;
+  ProfileChangeAboutScreen?: object;
+  ProfileChangePasswordScreen?: object;
 };

@@ -5,10 +5,9 @@
  * Real-time food nutrition prediction with MVC architecture
  * OpenAPI spec version: 3.0.0
  */
-import type { ApiResponseData } from './apiResponseData';
 
 export interface ApiResponse {
   status: number;
   message: string;
-  data?: ApiResponseData;
+  data?: unknown | null;
 }

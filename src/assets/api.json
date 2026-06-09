@@ -8,15 +8,17 @@
   "paths": {
     "/predict/": {
       "post": {
-        "tags": ["Prediction"],
+        "tags": [
+          "Prediction"
+        ],
         "summary": "Predict",
-        "description": "Single image prediction via REST.\n\nUpload a food image and get nutrition prediction (calories, fat, carbs, protein).",
-        "operationId": "predictFood",
+        "description": "Single image prediction via REST.\n\n1. Validates image contains food using YOLO\n2. If food detected, runs nutrition prediction model\n\nUpload a food image and get nutrition prediction (calories, fat, carbs, protein).",
+        "operationId": "predict_predict__post",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/BodyPredict"
+                "$ref": "#/components/schemas/Body_predict_predict__post"
               }
             }
           },
@@ -28,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NutritionResponse"
+                  "$ref": "#/components/schemas/ApiResponse"
                 }
               }
             }
@@ -48,10 +50,12 @@
     },
     "/users/register": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Register",
         "description": "Register a new user.",
-        "operationId": "registerUser",
+        "operationId": "register_users_register_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -88,10 +92,12 @@
     },
     "/users/login": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Login",
         "description": "Login user with username and password.",
-        "operationId": "loginUser",
+        "operationId": "login_users_login_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -128,10 +134,12 @@
     },
     "/users/validateSession": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Validate Session",
-        "description": "Validasi session token user.\n\nData yang dibutuhkan:\n- username\n- session_token",
-        "operationId": "validateSession",
+        "description": "Validate user session token.\n\nRequired fields:\n- username\n- session_token",
+        "operationId": "validate_session_users_validateSession_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -166,23 +174,49 @@
         }
       }
     },
-    "/users/{user_id}": {
+    "/users/me": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Get Profile",
-        "description": "Get user profile by ID.",
-        "operationId": "getUserProfile",
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "User Id"
+        "description": "Get current logged-in user profile.\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "get_profile_users_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
             }
           }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
         ],
+        "summary": "Edit Profile",
+        "description": "Edit current logged-in user profile.\n\nHeader: Authorization: Bearer <session_token>\nAll fields are optional — send only fields you want to update.",
+        "operationId": "edit_profile_users_me_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -204,34 +238,223 @@
               }
             }
           }
-        }
-      },
-      "put": {
-        "tags": ["Users"],
-        "summary": "Edit Profile",
-        "description": "Edit user profile. Semua field optional.",
-        "operationId": "updateUserProfile",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "User Id"
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Logout",
+        "description": "Logout user — clear session token.\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "logout_users_logout_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
             }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/users/me/password": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Change User Password",
+        "description": "Change password for the logged-in user.\n\nRequires the correct old password.\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "change_user_password_users_me_password_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/daily-nutritions/": {
+      "post": {
+        "tags": [
+          "Daily Nutrition"
+        ],
+        "summary": "Insert Nutrition",
+        "description": "Insert a daily nutrition entry with optional food image.\n\n- Send as **multipart/form-data**\n- `nutrition` field is a JSON string\n- `food_image` is optional file upload\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "insert_nutrition_daily_nutritions__post",
+        "security": [
+          {
+            "HTTPBearer": []
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserUpdateRequest"
+                "$ref": "#/components/schemas/Body_insert_nutrition_daily_nutritions__post"
               }
             }
           }
         },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Daily Nutrition"
+        ],
+        "summary": "Get Nutrition",
+        "description": "Get daily nutrition data.\n\n- Single date: provide `target_date`\n- Date range: provide `start_date` and `end_date`\n- Filter by category: provide `category`\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "get_nutrition_daily_nutritions__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "target_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Single date (YYYY-MM-DD)",
+              "title": "Target Date"
+            },
+            "description": "Single date (YYYY-MM-DD)"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Start date for range (YYYY-MM-DD)",
+              "title": "Start Date"
+            },
+            "description": "Start date for range (YYYY-MM-DD)"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "End date for range (YYYY-MM-DD)",
+              "title": "End Date"
+            },
+            "description": "End date for range (YYYY-MM-DD)"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter: breakfast | lunch | dinner",
+              "title": "Category"
+            },
+            "description": "Filter: breakfast | lunch | dinner"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -256,22 +479,102 @@
         }
       }
     },
-    "/users/logout": {
-      "post": {
-        "tags": ["Users"],
-        "summary": "Logout",
-        "description": "Logout user — clear session token.",
-        "operationId": "logoutUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LogoutRequest"
+    "/daily-nutritions/{entry_id}": {
+      "delete": {
+        "tags": [
+          "Daily Nutrition"
+        ],
+        "summary": "Delete Nutrition",
+        "description": "Soft delete a nutrition entry.\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "delete_nutrition_daily_nutritions__entry_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Entry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
               }
             }
           },
-          "required": true
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health-goals/": {
+      "get": {
+        "tags": [
+          "Health Goals"
+        ],
+        "summary": "Get Goal",
+        "description": "Get the health goal for the logged-in user, based on the user's own\n`health_goal` setting (custom returns the user's personal goal,\notherwise the global goal matching the user's gender).\n\nHeader: Authorization: Bearer <session_token>",
+        "operationId": "get_goal_health_goals__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
         },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/health-goals/list": {
+      "get": {
+        "tags": [
+          "Health Goals"
+        ],
+        "summary": "List Goals",
+        "description": "List all global health goals for a gender (excludes 'custom').\n\nNo authentication required.",
+        "operationId": "list_goals_health_goals_list_get",
+        "parameters": [
+          {
+            "name": "gender",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "male | female",
+              "title": "Gender"
+            },
+            "description": "male | female"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -299,15 +602,13 @@
     "/": {
       "get": {
         "summary": "Root",
-        "operationId": "getRoot",
+        "operationId": "root__get",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           }
@@ -317,15 +618,13 @@
     "/health": {
       "get": {
         "summary": "Health",
-        "operationId": "getHealth",
+        "operationId": "health_health_get",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": {}
               }
             }
           }
@@ -337,12 +636,16 @@
     "schemas": {
       "ActivityLevelEnum": {
         "type": "string",
-        "enum": ["sangat_jarang", "ringan", "sedang", "berat", "atlet"],
+        "enum": [
+          "sedentary",
+          "light",
+          "moderate",
+          "active",
+          "athlete"
+        ],
         "title": "ActivityLevelEnum"
       },
       "ApiResponse": {
-        "type": "object",
-        "required": ["status", "message"],
         "properties": {
           "status": {
             "type": "integer",
@@ -354,86 +657,131 @@
           },
           "data": {
             "anyOf": [
-              { "type": "object" },
-              { "type": "null" }
+              {},
+              {
+                "type": "null"
+              }
             ],
             "title": "Data"
           }
         },
+        "type": "object",
+        "required": [
+          "status",
+          "message"
+        ],
         "title": "ApiResponse"
       },
-      "BodyPredict": {
+      "Body_insert_nutrition_daily_nutritions__post": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date",
+            "description": "Date (YYYY-MM-DD)"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "breakfast | lunch | dinner"
+          },
+          "food_name": {
+            "type": "string",
+            "title": "Food Name"
+          },
+          "nutrition": {
+            "type": "string",
+            "title": "Nutrition",
+            "description": "JSON string, e.g. {\"calories\": 200, \"protein\": 10}"
+          },
+          "food_image": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Food Image"
+          }
+        },
         "type": "object",
-        "required": ["file"],
+        "required": [
+          "date",
+          "category",
+          "food_name",
+          "nutrition"
+        ],
+        "title": "Body_insert_nutrition_daily_nutritions__post"
+      },
+      "Body_predict_predict__post": {
         "properties": {
           "file": {
             "type": "string",
-            "format": "binary",
+            "contentMediaType": "application/octet-stream",
             "title": "File"
           }
         },
-        "title": "BodyPredict"
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_predict_predict__post"
+      },
+      "ChangePasswordRequest": {
+        "properties": {
+          "old_password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Old Password"
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "New Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_password",
+          "new_password"
+        ],
+        "title": "ChangePasswordRequest"
       },
       "GenderEnum": {
         "type": "string",
-        "enum": ["pria", "wanita"],
+        "enum": [
+          "male",
+          "female"
+        ],
         "title": "GenderEnum"
       },
       "HTTPValidationError": {
-        "type": "object",
         "properties": {
           "detail": {
-            "type": "array",
             "items": {
               "$ref": "#/components/schemas/ValidationError"
             },
+            "type": "array",
             "title": "Detail"
           }
         },
+        "type": "object",
         "title": "HTTPValidationError"
       },
       "HealthGoalEnum": {
         "type": "string",
-        "enum": ["turunkan_berat_badan", "tambah_masa_otot", "menjaga_kesehatan"],
+        "enum": [
+          "lose_weight",
+          "gain_muscle",
+          "maintain_health",
+          "custom"
+        ],
         "title": "HealthGoalEnum"
       },
-      "LogoutRequest": {
-        "type": "object",
-        "required": ["session_token"],
-        "properties": {
-          "session_token": {
-            "type": "string",
-            "title": "Session Token"
-          }
-        },
-        "title": "LogoutRequest"
-      },
-      "NutritionResponse": {
-        "type": "object",
-        "required": ["calories", "fat_g", "carb_g", "protein_g"],
-        "properties": {
-          "calories": {
-            "type": "number",
-            "title": "Calories"
-          },
-          "fat_g": {
-            "type": "number",
-            "title": "Fat G"
-          },
-          "carb_g": {
-            "type": "number",
-            "title": "Carb G"
-          },
-          "protein_g": {
-            "type": "number",
-            "title": "Protein G"
-          }
-        },
-        "title": "NutritionResponse"
-      },
       "UserLoginRequest": {
-        "type": "object",
-        "required": ["username", "password"],
         "properties": {
           "username": {
             "type": "string",
@@ -444,22 +792,28 @@
             "title": "Password"
           }
         },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
         "title": "UserLoginRequest"
       },
       "UserRegisterRequest": {
-        "type": "object",
-        "required": ["name", "username", "password", "gender", "height_cm", "weight_kg", "age", "health_goal", "activity_level"],
         "properties": {
           "name": {
             "type": "string",
+            "minLength": 1,
             "title": "Name"
           },
           "username": {
             "type": "string",
+            "minLength": 1,
             "title": "Username"
           },
           "password": {
             "type": "string",
+            "minLength": 1,
             "title": "Password"
           },
           "gender": {
@@ -467,14 +821,17 @@
           },
           "height_cm": {
             "type": "number",
+            "exclusiveMinimum": 0,
             "title": "Height Cm"
           },
           "weight_kg": {
             "type": "number",
+            "exclusiveMinimum": 0,
             "title": "Weight Kg"
           },
           "age": {
             "type": "integer",
+            "exclusiveMinimum": 0,
             "title": "Age"
           },
           "health_goal": {
@@ -482,48 +839,132 @@
           },
           "activity_level": {
             "$ref": "#/components/schemas/ActivityLevelEnum"
+          },
+          "nutrition": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nutrition"
           }
         },
+        "type": "object",
+        "required": [
+          "name",
+          "username",
+          "password",
+          "gender",
+          "height_cm",
+          "weight_kg",
+          "age",
+          "health_goal",
+          "activity_level"
+        ],
         "title": "UserRegisterRequest"
       },
       "UserUpdateRequest": {
-        "type": "object",
         "properties": {
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           },
           "password": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Password"
           },
           "gender": {
-            "anyOf": [{ "$ref": "#/components/schemas/GenderEnum" }, { "type": "null" }]
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GenderEnum"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "height_cm": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Height Cm"
           },
           "weight_kg": {
-            "anyOf": [{ "type": "number" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Weight Kg"
           },
           "age": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Age"
           },
           "health_goal": {
-            "anyOf": [{ "$ref": "#/components/schemas/HealthGoalEnum" }, { "type": "null" }]
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HealthGoalEnum"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "activity_level": {
-            "anyOf": [{ "$ref": "#/components/schemas/ActivityLevelEnum" }, { "type": "null" }]
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActivityLevelEnum"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nutrition": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nutrition"
           }
         },
+        "type": "object",
         "title": "UserUpdateRequest"
       },
       "ValidateSessionRequest": {
-        "type": "object",
-        "required": ["username", "session_token"],
         "properties": {
           "username": {
             "type": "string",
@@ -534,17 +975,27 @@
             "title": "Session Token"
           }
         },
+        "type": "object",
+        "required": [
+          "username",
+          "session_token"
+        ],
         "title": "ValidateSessionRequest"
       },
       "ValidationError": {
-        "type": "object",
-        "required": ["loc", "msg", "type"],
         "properties": {
           "loc": {
-            "type": "array",
             "items": {
-              "anyOf": [{ "type": "string" }, { "type": "integer" }]
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
             },
+            "type": "array",
             "title": "Location"
           },
           "msg": {
@@ -554,9 +1005,28 @@
           "type": {
             "type": "string",
             "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
           }
         },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

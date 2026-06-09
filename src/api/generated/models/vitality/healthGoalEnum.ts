@@ -10,7 +10,8 @@ export type HealthGoalEnum = typeof HealthGoalEnum[keyof typeof HealthGoalEnum];
 
 
 export const HealthGoalEnum = {
-  turunkan_berat_badan: 'turunkan_berat_badan',
-  tambah_masa_otot: 'tambah_masa_otot',
-  menjaga_kesehatan: 'menjaga_kesehatan',
+  lose_weight: 'lose_weight',
+  gain_muscle: 'gain_muscle',
+  maintain_health: 'maintain_health',
+  custom: 'custom',
 } as const;

@@ -8,7 +8,7 @@ export const vitalityServiceRequest = async <T>(
   options?: ApisauceConfig
 ): Promise<ApiResponse<T>> => {
   const { url, ...restOfConfig } = config;
-  const prefixUrl = `vitality/${url?.replace(/^\//, '')}`;
+  const prefixUrl = `/${url?.replace(/^\//, '')}`;
   const response = await apisauce[config.method?.toLowerCase()](
     prefixUrl,
     restOfConfig.data || restOfConfig.params,

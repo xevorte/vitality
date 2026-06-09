@@ -10,9 +10,9 @@ export type ActivityLevelEnum = typeof ActivityLevelEnum[keyof typeof ActivityLe
 
 
 export const ActivityLevelEnum = {
-  sangat_jarang: 'sangat_jarang',
-  ringan: 'ringan',
-  sedang: 'sedang',
-  berat: 'berat',
-  atlet: 'atlet',
+  sedentary: 'sedentary',
+  light: 'light',
+  moderate: 'moderate',
+  active: 'active',
+  athlete: 'athlete',
 } as const;

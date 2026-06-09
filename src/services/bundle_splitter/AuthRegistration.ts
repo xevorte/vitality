@@ -42,6 +42,11 @@ export const RegisterStep6Screen = register({
   loader: () => require('screens/auth/RegisterStep6Screen'),
 });
 
+export const RegisterSuccessScreen = register({
+  name: NAVIGATION_NAME.AUTH.registerSuccessScreen,
+  loader: () => require('screens/auth/RegisterSuccessScreen'),
+});
+
 export const CustomTargetScreen = register({
   name: NAVIGATION_NAME.AUTH.customTargetScreen,
   loader: () => require('screens/auth/CustomTargetScreen'),

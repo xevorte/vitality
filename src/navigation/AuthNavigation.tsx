@@ -11,6 +11,7 @@ import {
   RegisterStep4Screen,
   RegisterStep5Screen,
   RegisterStep6Screen,
+  RegisterSuccessScreen,
   CustomTargetScreen,
 } from 'services/bundle_splitter/AuthRegistration';
 
@@ -32,6 +33,7 @@ const AuthNavigation = () => {
         <Stack.Screen component={RegisterStep4Screen} name="RegisterStep4Screen" />
         <Stack.Screen component={RegisterStep5Screen} name="RegisterStep5Screen" />
         <Stack.Screen component={RegisterStep6Screen} name="RegisterStep6Screen" />
+        <Stack.Screen component={RegisterSuccessScreen} name="RegisterSuccessScreen" />
         <Stack.Screen component={CustomTargetScreen} name="CustomTargetScreen" />
       </Stack.Navigator>
   );

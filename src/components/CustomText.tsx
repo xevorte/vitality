@@ -37,7 +37,7 @@ const Text = ({
       return Fonts.bold;
     }
     if (type === 'semibold') {
-      return Fonts.semi;
+      return Fonts.semibold;
     }
     if (type === 'medium') {
       return Fonts.medium;

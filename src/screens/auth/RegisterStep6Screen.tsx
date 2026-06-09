@@ -2,6 +2,7 @@ import { View, TouchableOpacity, SafeAreaView, ScrollView, Image, Alert } from '
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
 import { useAuthStore } from 'stores/auth/AuthStore';
 import NavigationServices from 'services/NavigationServices';
+import Illustration from 'assets/imgs/tdee.png';
 import Text from 'components/CustomText';
 import Logo from 'assets/imgs/logo.png';
 
@@ -9,7 +10,10 @@ export default function RegisterStep6Screen() {
   const { registerData, register } = useAuthStore();
 
   const handleRegister = async () => {
+    console.log(registerData);
     const res: any = await register(registerData);
+
+    // nutrition: {"fat_g": 37.24, "carb_g": 43.64, "calories": 692.3, "protein_g": 54.98}
 
     if (res?.status == 401) {
       Alert.alert(
@@ -20,25 +24,22 @@ export default function RegisterStep6Screen() {
           'Network Error'
       );
     } else {
-      Alert.alert('Berhasil Daftar', 'silahkan login untuk melanjutkan');
-      setTimeout(() => {
-        NavigationServices.replace(NAVIGATION_NAME.AUTH.loginScreen, {});
-      }, 1000);
+      NavigationServices.replace(NAVIGATION_NAME.AUTH.registerSuccessScreen, {});
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#FAF8FF]">
-      <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ paddingTop: 24, paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
         
-        <View className="flex-row items-center justify-between mb-8">
+        <View className="flex-row items-center justify-between mb-4">
           <View className="w-8" />
-          <Image source={Logo} className="w-[102px]" resizeMode='contain' />
+          <Image source={Logo} className="w-36 h-14" resizeMode='contain' />
           <View className="w-8" /> 
         </View>
 
         <View className="mb-8 items-center w-full">
-          <Text size={18} type={'bold'} className="!text-gray-900 mb-3">
+          <Text size={24} type={'bold'} className="!text-gray-900">
             Tentang TDEE
           </Text>
         </View>
@@ -46,6 +47,7 @@ export default function RegisterStep6Screen() {
         {/* Hero Image Container */}
         <View className="w-full h-56 bg-gray-700 justify-end p-6 mb-8 relative">
           {/* PLACEHOLDER GAMBAR: Export dan letakkan Image component di sini dengan layout absolute (inset-0) */}
+          <Image source={Illustration} className="w-full h-full absolute inset-0" resizeMode='cover' />
           <Text size={24} type='bold' className="!text-white z-10 w-3/4 leading-snug">
             Memahami Energi Harian Anda
           </Text>
@@ -127,7 +129,7 @@ export default function RegisterStep6Screen() {
           </View>
 
           {/* Button Mengerti */}
-          <TouchableOpacity className="w-full bg-[#006C49] disabled:bg-[#E2E7FF] py-4 rounded-full items-center justify-center shadow-sm" onPress={handleRegister}>
+          <TouchableOpacity className="w-full bg-primary disabled:bg-[#E2E7FF] py-4 rounded-full items-center justify-center shadow-sm" onPress={handleRegister}>
             <Text type='bold' className="!text-white">
               Daftar Sekarang
             </Text>

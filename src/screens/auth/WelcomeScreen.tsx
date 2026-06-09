@@ -1,18 +1,21 @@
 import { View, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-native';
-import Logo from 'assets/imgs/logo.png';
-import Illustration from 'assets/imgs/splash-illustration.png';
-import Text from 'components/CustomText';
-import NavigationServices from 'services/NavigationServices';
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
+import { useAuthStore } from 'stores/auth/AuthStore';
+import Illustration from 'assets/imgs/splash-illustration.png';
+import NavigationServices from 'services/NavigationServices';
+import Text from 'components/CustomText';
+import Logo from 'assets/imgs/logo.png';
 
 export default function WelcomeScreen() {
+  const { resetRegisterData } = useAuthStore();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FAF8FF' }}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        <View className="flex items-center justify-center bg-white h-20 p-4 pt-8 pb-0">
+          <Image source={Logo} className="w-36 h-14 mb-6" resizeMode='contain' />
+        </View>
         <View className='p-4'>
-          <Image source={Logo} className="w-[118px] mb-6" resizeMode='contain' />
-
           <View  
             className="w-full h-2/5 mb-6 overflow-hidden"
           >
@@ -48,7 +51,10 @@ export default function WelcomeScreen() {
             </View>
           </View>
 
-          <TouchableOpacity className="w-full bg-[#006C49] rounded-full py-4 flex-row justify-center items-center mb-6 shadow-md shadow-[#006C49]/30" onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.loginScreen, {})}>
+          <TouchableOpacity className="w-full bg-primary rounded-full py-4 flex-row justify-center items-center mb-6 shadow-md shadow-[#006C49]/30" onPress={() => {
+            resetRegisterData();
+            NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep1Screen, {});
+          }}>
             <Text type='bold' className="!text-white mr-2">
               Mulai Sekarang
             </Text>
@@ -60,7 +66,7 @@ export default function WelcomeScreen() {
 
         <View className="flex-col gap-2 items-center bg-white py-4 shadow-xl shadow-gray-200 mt-12">
           <Text type='bold' size={14} className="!text-gray-500">Sudah punya akun? </Text>
-          <TouchableOpacity onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep1Screen, {})}>
+          <TouchableOpacity onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.loginScreen, {})}>
             <Text type='bold' size={14} className="!text-[#006C49]">
               Masuk ke Akun Anda
             </Text>

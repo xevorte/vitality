@@ -5,9 +5,12 @@
  * Real-time food nutrition prediction with MVC architecture
  * OpenAPI spec version: 3.0.0
  */
+import type { ValidationErrorCtx } from './validationErrorCtx';
 
 export interface ValidationError {
   loc: (string | number)[];
   msg: string;
   type: string;
+  input?: unknown;
+  ctx?: ValidationErrorCtx;
 }

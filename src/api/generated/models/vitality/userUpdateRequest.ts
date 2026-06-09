@@ -18,4 +18,5 @@ export interface UserUpdateRequest {
   age?: number | null;
   health_goal?: HealthGoalEnum | null;
   activity_level?: ActivityLevelEnum | null;
+  nutrition?: unknown | null;
 }

@@ -5,11 +5,6 @@
  * Real-time food nutrition prediction with MVC architecture
  * OpenAPI spec version: 3.0.0
  */
-import type {
-  GetHealth200,
-  GetRoot200
-} from '../../../models/vitality';
-
 import { vitalityServiceRequest } from '../../../../utils/vitality-service-request';
 
 
@@ -19,10 +14,10 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
   /**
  * @summary Root
  */
-export const getRoot = (
+export const rootGet = (
 
- options?: SecondParameter<typeof vitalityServiceRequest<GetRoot200>>,) => {
-      return vitalityServiceRequest<GetRoot200>(
+ options?: SecondParameter<typeof vitalityServiceRequest<unknown>>,) => {
+      return vitalityServiceRequest<unknown>(
       {url: `/`, method: 'GET'
     },
       options);
@@ -30,10 +25,10 @@ export const getRoot = (
   /**
  * @summary Health
  */
-export const getHealth = (
+export const healthHealthGet = (
 
- options?: SecondParameter<typeof vitalityServiceRequest<GetHealth200>>,) => {
-      return vitalityServiceRequest<GetHealth200>(
+ options?: SecondParameter<typeof vitalityServiceRequest<unknown>>,) => {
+      return vitalityServiceRequest<unknown>(
       {url: `/health`, method: 'GET'
     },
       options);

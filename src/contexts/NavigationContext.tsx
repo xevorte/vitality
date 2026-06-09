@@ -1,15 +1,22 @@
-import { createContext, useContext } from 'react';
-import { useNavigationState } from '@react-navigation/native';
+import { createContext, useContext, useMemo } from 'react';
 
-const NavigationContext = createContext({ currentScreen: '' });
+type NavigationContextValue = {
+  currentScreen: string;
+};
 
-export function NavigationProvider({ children }: { children: React.ReactNode }) {
-  const currentScreen = useNavigationState(state => {
-    return state?.routes[state.index]?.name || '';
-  });
+const NavigationContext = createContext<NavigationContextValue>({ currentScreen: '' });
+
+export function NavigationProvider({
+  children,
+  currentScreen,
+}: {
+  children: React.ReactNode;
+  currentScreen: string;
+}) {
+  const value = useMemo(() => ({ currentScreen }), [currentScreen]);
 
   return (
-    <NavigationContext.Provider value={{ currentScreen }}>
+    <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   );

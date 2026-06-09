@@ -13,35 +13,35 @@ export default function ActivityLevelScreen() {
       icon: '🛋️',
       title: 'Sangat jarang olahraga',
       description: 'Pekerjaan kantor atau gaya hidup sedenter',
-      value: 'sangat_jarang'
+      value: 'sedentary'
     },
     {
       id: 2,
       icon: '🚶',
       title: 'Ringan (1-3x/ minggu)',
       description: 'Jalan santai atau olahraga intensitas rendah',
-      value: 'ringan'
+      value: 'light'
     },
     {
       id: 3,
       icon: '🏋️',
       title: 'Sedang (3-5x/ minggu)',
       description: 'Latihan kekuatan atau aktivitas fisik moderat',
-      value: 'sedang'
+      value: 'moderate'
     },
     {
       id: 4,
       icon: '🏃',
       title: 'Aktif (6-7x/ minggu)',
       description: 'Latihan intensif atau aktivitas fisik tinggi',
-      value: 'aktif'
+      value: 'active'
     },
     {
       id: 5,
       icon: '⚡',
       title: 'Atlet/ Sangat Aktif',
       description: 'Latihan fisik berat atau pekerjaan fisik ekstrim',
-      value: 'atlet'
+      value: 'athlete'
     }
   ];
 
@@ -55,7 +55,7 @@ export default function ActivityLevelScreen() {
         
         <View className="flex-row items-center justify-between mb-8">
           <View className="w-8" />
-          <Image source={Logo} className="w-[102px]" resizeMode='contain' />
+          <Image source={Logo} className="w-36 h-14" resizeMode='contain' />
           <View className="w-8" /> 
         </View>
 
@@ -84,7 +84,7 @@ export default function ActivityLevelScreen() {
               className={`flex-row items-center ${item.value === registerData.activity_level ? 'bg-[#F3FAF7] border-2 border-[#10B981]' : 'bg-white border border-[#E2E8F0]'} p-4 rounded-2xl mb-3 shadow-sm`}
               onPress={() => setRegisterData({ ...registerData, activity_level: item.value })}
             >
-              <View className={`w-12 h-12 ${item.value === registerData.activity_level ? 'bg-[#10B981]' : 'bg-[#F2F3FF]'} rounded-xl items-center justify-center py-3.5 px-2 mr-4`}>
+              <View className={`${item.value === registerData.activity_level ? 'bg-[#10B981]' : 'bg-[#F2F3FF]'} rounded-xl items-center justify-center p-3.5 mr-4`}>
                 <Text size={20} className={item.value === registerData.activity_level ? '!text-white' : '!text-[#006C49]'}>
                   {item.icon}
                 </Text>
@@ -107,14 +107,15 @@ export default function ActivityLevelScreen() {
         </View>
 
         {/* Footer Navigation (Selalu di bawah) */}
-        <View className="flex-row justify-between items-center mt-auto pt-6">
+        <View className="flex-row justify-between items-center mt-auto pt-4">
           <TouchableOpacity className="flex-row items-center p-2 -ml-2" onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep4Screen, {})}>
-            <Text size={20} className="!text-[#515F74] font-bold mr-2">←</Text>
-            <Text size={16} className="!text-[#515F74] font-bold">Kembali</Text>
+            <Text type="bold" className="!text-[#515F74] mr-2">←</Text>
+            <Text type="bold" className="!text-[#515F74]">Kembali</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="bg-[#006C49] disabled:bg-[#E2E7FF] px-6 py-4 rounded-full flex-row items-center shadow-sm" disabled={!registerData?.activity_level} onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep6Screen, {})}>
-            <Text type='bold' className="!text-white mr-2">Lanjutkan</Text>
+          <TouchableOpacity className="bg-primary disabled:bg-[#E2E7FF] px-6 py-3.5 rounded-full flex-row items-center shadow-sm" disabled={!registerData?.activity_level} onPress={() => NavigationServices.push(NAVIGATION_NAME.AUTH.registerStep6Screen, {})}>
+            <Text type="bold" className="!text-white mr-2">Lanjutkan</Text>
+            <Text type="bold" className="!text-white">→</Text>
           </TouchableOpacity>
         </View>
 

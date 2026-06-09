@@ -1,14 +1,17 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
+import Text from 'components/CustomText';
 
-const HomeScreen = () => {
+export default function StatisticScreen() {
   return (
-    <View>
-      <Text>HomeScreen</Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-[#FAFAFA]">
+      <ScrollView 
+        contentContainerStyle={{ flexGrow: 1, padding: 24, paddingBottom: 32 }} 
+        showsVerticalScrollIndicator={false}
+      >
+        <Text size={24} type='bold' className="!text-primaryDark mb-8">
+          Statistik
+        </Text>
+      </ScrollView>
+    </SafeAreaView>
   );
-};
-
-export default HomeScreen;
-
-const styles = StyleSheet.create({});
+}

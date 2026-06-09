@@ -1,47 +1,123 @@
 import { produce } from 'immer';
 import LoadingHelper from 'services/LoadingHelper';
 
-import { useSessionStore } from './SessionStore';
 import SessionModel from 'models/SessionModel';
+import { getGoalHealthGoalsGet, listGoalsHealthGoalsListGet } from 'api/generated/services/vitality/health-goals/health-goals';
+import { BodyPredictPredictPost, GetNutritionDailyNutritionsGetParams, ListGoalsHealthGoalsListGetParams } from 'api/generated/models/vitality';
+import { deleteNutritionDailyNutritionsEntryIdDelete, getNutritionDailyNutritionsGet, insertNutritionDailyNutritionsPost } from 'api/generated/services/vitality/daily-nutrition/daily-nutrition';
+import { BodyInsertNutrition } from 'api/generated/models/vitality/bodyInsertNutrition';
+import { predictPredictPost } from 'api/generated/services/vitality/prediction/prediction';
 
 const SessionActions = (set: any, get: any) => {
   return {
-    profileRequest: async () => {
+    predictNutrition: async (params: BodyPredictPredictPost) => {
       try {
-        const res = await getAccount();
+        LoadingHelper.show();
 
-        if (res.ok) {
-          set(
-            produce((state: SessionModel) => {
-              state.profile = res?.data?.data;
-            })
-          );
+        const res: any = await predictPredictPost(params);
 
+        if (res?.ok) {
           return res;
-        } else {
-          throw res;
         }
+
+        throw res;
       } catch (error) {
-        console.log(error, 'error');
+        console.tron.error(error);
         return error;
       } finally {
         LoadingHelper.hide();
       }
     },
-    logout: () => {
-      const {
-        setProfile,
-        setRefreshToken,
-        setToken,
-        setLogin,
-      } = useSessionStore.getState();
+    getListNutritions: async (params: GetNutritionDailyNutritionsGetParams) => {
+      try {
+        LoadingHelper.show();
 
-      setRefreshToken('');
-      setToken('');
-      setLogin(false);
-      setProfile({});
+        const res: any = await getNutritionDailyNutritionsGet(params);
+
+        if (res?.ok) {
+          return res;
+        }
+
+        throw res;
+      } catch (error) {
+        console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
+      }
     },
-    
+    createNutrition: async (params: BodyInsertNutrition) => {
+      try {
+        LoadingHelper.show();
+
+        const res: any = await insertNutritionDailyNutritionsPost(params);
+
+        if (res?.ok) {
+          return res;
+        }
+
+        throw res;
+      } catch (error) {
+        console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
+      }
+    },
+    deleteNutrition: async (params: number) => {
+      try {
+        LoadingHelper.show();
+
+        const res: any = await deleteNutritionDailyNutritionsEntryIdDelete(params);
+
+        if (res?.ok) {
+          return res;
+        }
+
+        throw res;
+      } catch (error) {
+        console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
+      }
+    },
+    getListGoals: async (params: ListGoalsHealthGoalsListGetParams) => {
+      try {
+        LoadingHelper.show();
+
+        const res: any = await listGoalsHealthGoalsListGet(params);
+
+        if (res?.ok) {
+          return res;
+        }
+
+        throw res;
+      } catch (error) {
+        console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
+      }
+    },
+    getUserGoal: async () => {
+      try {
+        LoadingHelper.show();
+
+        const res: any = await getGoalHealthGoalsGet();
+
+        if (res?.ok) {
+          return res;
+        }
+
+        throw res;
+      } catch (error) {
+        console.tron.error(error);
+        return error;
+      } finally {
+        LoadingHelper.hide();
+      }
+    },
     setProfile: (profile: any) => {
       set(
         produce((state: SessionModel) => {
