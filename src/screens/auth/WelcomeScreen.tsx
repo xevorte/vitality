@@ -45,10 +45,10 @@ export default function WelcomeScreen() {
               <View className="flex-1 bg-white border border-gray-100 rounded-2xl p-4 items-center shadow-sm">
                 <Text size={24} className="!text-[#006C49] mb-2">⏳</Text>
                 <Text type='semibold' size={14} className="!text-gray-900 text-center mb-1">
-                  Estimasi Berat & Gizi
+                  Estimasi Gizi
                 </Text>
                 <Text size={10} className="!text-gray-500 text-center">
-                  Makro & kalori instan tanpa timbangan.
+                  Makro & kalori instan.
                 </Text>
               </View>
             </View>

@@ -183,9 +183,9 @@ const ScanScreen = () => {
           </Pressable>
 
           {/* Tombol Galeri Placeholder */}
-          {/* <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-black/40">
-            <Text color="white" size={20}>🖼️</Text>
-          </TouchableOpacity> */}
+          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full">
+            <Text color="white" size={20}></Text>
+          </TouchableOpacity>
         </View>
 
       </View>

@@ -32,13 +32,6 @@ export default function RegisterStep4Screen() {
       description: 'Sesuaikan target gizi harian untuk menjaga metabolisme dan kebugaran tubuh tetap seimbang.',
       value: 'maintain_health',
     },
-    {
-      id: 4,
-      icon: '✏️',
-      title: 'Target Kustom',
-      description: 'Atur sendiri target kalori dan asupan nutrisi makro harian sesuai kebutuhan spesifik Anda.',
-      value: 'custom',
-    },
   ]);
 
   const getListHealthGoals = async () => {
