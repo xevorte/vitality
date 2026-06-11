@@ -42,7 +42,7 @@ export default function CustomTargetScreen() {
 
         <View className="w-56 h-56 rounded-full border-[12px] border-[#006C49] mx-auto items-center justify-center mb-6 bg-white shadow-sm">
           <Text className="text-4xl font-bold text-[#18042A]">{calories.toLocaleString()}</Text>
-          <Text className="text-[#515F74] font-bold tracking-widest text-xs mt-1">KCAL / HARI</Text>
+          <Text className="text-[#515F74] font-bold tracking-widest text-xs mt-1">Kalori / HARI</Text>
         </View>
 
         <Text className="text-center text-[#515F74] text-base mb-8 px-4 leading-relaxed">
@@ -57,7 +57,7 @@ export default function CustomTargetScreen() {
               <View className="bg-[#E6F6FC] px-4 py-1.5 rounded-lg mr-2">
                 <Text className="text-[#006C49] font-bold text-base">{calories}</Text>
               </View>
-              <Text className="text-[#515F74]">kcal</Text>
+              <Text className="text-[#515F74]">Kalori</Text>
             </View>
           </View>
           
@@ -73,8 +73,8 @@ export default function CustomTargetScreen() {
             thumbTintColor="#006C49"
           />
           <View className="flex-row justify-between mt-1 px-1">
-            <Text className="text-xs text-[#515F74]">500 kcal</Text>
-            <Text className="text-xs text-[#515F74]">5000 kcal</Text>
+            <Text className="text-xs text-[#515F74]">500 Kalori</Text>
+            <Text className="text-xs text-[#515F74]">5000 Kalori</Text>
           </View>
         </View>
 

@@ -4,10 +4,13 @@ import { View, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-n
 import NavigationServices from 'services/NavigationServices';
 import { useAuthStore } from 'stores/auth/AuthStore';
 import Logo from 'assets/imgs/logo.png';
+import { useEffect, useState } from 'react';
+import { useSessionStore } from 'stores/session/SessionStore';
 
 export default function RegisterStep4Screen() {
   const { registerData, setRegisterData } = useAuthStore();
-  const data = [
+  const { getListGoals } = useSessionStore();
+  const [data, setData] = useState<any>([
     {
       id: 1,
       icon: '⏳',
@@ -36,8 +39,36 @@ export default function RegisterStep4Screen() {
       description: 'Atur sendiri target kalori dan asupan nutrisi makro harian sesuai kebutuhan spesifik Anda.',
       value: 'custom',
     },
-  ];
+  ]);
 
+  const getListHealthGoals = async () => {
+    const res: any = await getListGoals({
+      gender: registerData?.gender || "male",
+    });
+
+    if (res?.status == 401) {
+      Alert.alert(
+        res?.data?.details?.join('\n') ||
+          res?.data?.error_description ||
+          res?.data?.message ||
+          res?.problem ||
+          'Network Error'
+      );
+    } else {
+      console.log(res?.data?.data);
+      setData((prev: any) => prev?.map((e: any) => {
+        const matched = res?.data?.data?.find((x: any) => x.goal_category === e.value);
+        return matched 
+          ? { ...e, nutrition: matched.nutrition }
+          : e;
+      }));
+    }
+  };
+
+  useEffect(() => {
+    getListHealthGoals();
+  }, []);
+  
   return (
     <SafeAreaView className="flex-1 bg-[#FAF8FF]">
 
@@ -81,13 +112,13 @@ export default function RegisterStep4Screen() {
             <View className="flex-1">
               <Text size={12} className="!text-[#515F74] mb-1">Kalori</Text>
               <Text type="bold" className="!text-[#18042A]">
-                2200 kcal
+                {data?.find((e: any) => e.value === registerData?.health_goal)?.nutrition?.calories || 0} Kalori
               </Text>
             </View>
             <View className="flex-1">
               <Text size={12} className="!text-[#515F74] mb-1">Protein</Text>
               <Text type="bold" className="!text-[#18042A]">
-                110 g
+                {data?.find((e: any) => e.value === registerData?.health_goal)?.nutrition?.protein_g || 0} g
               </Text>
             </View>
           </View>
@@ -96,13 +127,13 @@ export default function RegisterStep4Screen() {
             <View className="flex-1">
               <Text size={12} className="!text-[#515F74] mb-1">Karbo</Text>
               <Text type="bold" className="!text-[#18042A]">
-                275 g
+                {data?.find((e: any) => e.value === registerData?.health_goal)?.nutrition?.carb_g || 0} g
               </Text>
             </View>
             <View className="flex-1">
               <Text size={12} className="!text-[#515F74] mb-1">Lemak</Text>
               <Text type="bold" className="!text-[#18042A]">
-                73 g
+                {data?.find((e: any) => e.value === registerData?.health_goal)?.nutrition?.fat_g || 0} g
               </Text>
             </View>
           </View>

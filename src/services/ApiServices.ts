@@ -7,7 +7,7 @@ import { useAuthStore } from 'stores/auth/AuthStore';
 class ApiService {
   api: ApisauceInstance;
   constructor() {
-    const baseUrl = Config.BASE_URL || 'http://localhost:8000';
+    const baseUrl = Config.BASE_URL || 'https://snowdrift-flashy-septum.ngrok-free.dev';
 
     this.api = apisauce.create({
       baseURL: baseUrl,
@@ -68,6 +68,53 @@ class ApiService {
 
   getInstance() {
     return this.api;
+  }
+
+  predict(params: any): Promise<ApiResponse<any>> {
+    const file = params?.file ?? params;
+    const formData = new FormData();
+
+    if (file) {
+      formData.append('file', file);
+    }
+
+    return this.api.post('/predict/', formData, {
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  createNutrition(params: any): Promise<ApiResponse<any>> {
+    const formData = new FormData();
+
+    if (params?.category) {
+      formData.append('category', params?.category);
+    }
+
+    if (params?.date) {
+      formData.append('date', params?.date);
+    }
+
+    if (params?.food_name) {
+      formData.append('food_name', params?.food_name);
+    }
+
+    if (params?.nutrition) {
+      formData.append('nutrition', JSON.stringify(params?.nutrition));
+    }
+
+    if (params?.food_image) {
+      formData.append('food_image', params?.food_image);
+    }
+
+    return this.api.post('/daily-nutritions/', formData, {
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 };
 

@@ -41,7 +41,6 @@ if(bodyInsertNutritionDailyNutritionsPost.food_image !== undefined && bodyInsert
 
       return vitalityServiceRequest<ApiResponse>(
       {url: `/daily-nutritions/`, method: 'POST',
-      headers: {'Content-Type': 'multipart/form-data', },
        data: formData
     },
       options);

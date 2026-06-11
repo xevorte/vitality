@@ -1,22 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
+  Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import mime from 'mime';
 
 import Text from 'components/CustomText';
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
 import NavigationServices from 'services/NavigationServices';
 import requestCameraPermission from 'services/Permission';
+import { useSessionStore } from 'stores/session/SessionStore';
+import { useRoute } from '@react-navigation/native';
+import ApiServices from 'services/ApiServices';
 
 const ScanScreen = () => {
+  const { predictNutrition, createNutrition } = useSessionStore();
+  const { category } = useRoute<any>().params;
   const camera = useRef<any>(null);
   const device = useCameraDevice('back');
   const [disabledButton, setDisabledButton] = useState(false);
+  const [isTorchMode, setIsTorchMode] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
 
   const initCamera = async () => {
@@ -29,17 +38,41 @@ const ScanScreen = () => {
       setDisabledButton(true);
 
       try {
-        const options = { quality: 100 };
-        const photo = await camera.current?.takeSnapshot(options);
-
+        const options = { quality: 100, skipMetadata: true };
+        const photo = await camera.current.takePhoto(options);
         
-        NavigationServices.push(
-          NAVIGATION_NAME.MAIN.scanDetailScreen,
-          {}
-        );
+        const imagePath = photo?.path || photo?.uri;
+        const file = {
+          uri: Platform.OS === 'android' ? `file://${imagePath}` : imagePath,
+          type: `image/*`,
+          name: `foods.jpg`,
+        };
+
+        const res: any = await ApiServices.predict({ file });
+
+        if (res?.status == 401) {
+          Alert.alert(
+            res?.data?.details?.join('\n') ||
+              res?.data?.error_description ||
+              res?.data?.message ||
+              res?.problem ||
+              'Network Error'
+          );
+        } else {
+          console.log(res?.data);
+          if (res?.data?.message == "Prediction successful") {
+            NavigationServices.push(
+              NAVIGATION_NAME.MAIN.scanDetailScreen,
+              { category, food: { food_image: file, nutrition: res?.data?.data } }
+            );
+          } else {
+            Alert.alert("Gagal Mendeteksi Makanan");
+          }
+        }
       } catch (error: any) {
         console.log('Capture failed', error);
         Alert.alert(error?.data?.message);
+      } finally {
         setDisabledButton(false);
       }
     }
@@ -76,10 +109,20 @@ const ScanScreen = () => {
 
   return (
     <View className="h-full bg-white">
+      {disabledButton && (
+        <View className="absolute inset-0 bg-black/50 justify-center items-center">
+          <View className="bg-white p-6 rounded-xl items-center">
+            <ActivityIndicator size="large" color="#006C49" />
+            <Text className="mt-3 text-gray-600">Memproses...</Text>
+          </View>
+        </View>
+      )}
       <Camera
         device={device}
         isActive
+        photo
         ref={camera}
+        torch={isTorchMode ? 'on' : 'off'}
         style={StyleSheet.absoluteFill}
       />
       <View className="absolute inset-0 flex-col justify-between p-6 bg-black/20">
@@ -88,7 +131,7 @@ const ScanScreen = () => {
         <View className="flex-row justify-between items-center mt-6">
           <TouchableOpacity
             onPress={() => NavigationServices.pop()} 
-            className="w-10 h-10 items-center justify-center rounded-full bg-black/40"
+            className="w-10 h-10 items-center justify-center rounded-full bg-black/40 pb-2"
           >
             <Text color="white" size={24}>←</Text>
           </TouchableOpacity>
@@ -119,35 +162,30 @@ const ScanScreen = () => {
             type="medium"
             size={14}
           >
-            Sejajarkan bahan mentah di dalam bingkai
+            Sejajarkan makanan di dalam bingkai
           </Text>
         </View>
 
         {/* BOTTOM BAR: Flash, Capture Trigger, & Gallery */}
-        <View className="flex-row justify-between items-center mb-6 px-4">
+        <View className="flex-row justify-between items-center mb-16 px-4">
           {/* Tombol Flash Placeholder */}
-          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-black/40">
+          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-black/40" onPress={() => setIsTorchMode(!isTorchMode)}>
             <Text color="white" size={20}>⚡</Text>
           </TouchableOpacity>
 
           {/* Tombol Shutter Utama (Dibuat persis seperti lingkaran ganda di gambar) */}
-          {!disabledButton ? (
-            <Pressable
-              className="h-20 w-20 bg-white/20 p-1.5 rounded-full items-center justify-center border-2 border-white"
-              onPress={handleCapture}
-            >
-              <View className="h-full w-full bg-white rounded-full border-2 border-gray-200" />
-            </Pressable>
-          ) : (
-            <View className="h-20 w-20 items-center justify-center">
-              <Text color="white">Memuat...</Text>
-            </View>
-          )}
+          <Pressable
+            className="h-20 w-20 bg-white/20 p-1.5 rounded-full items-center justify-center border-2 border-white disabled:border-primary"
+            onPress={handleCapture}
+            disabled={disabledButton}
+          >
+            <View className="h-full w-full bg-white rounded-full border-2 border-gray-200" />
+          </Pressable>
 
           {/* Tombol Galeri Placeholder */}
-          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-black/40">
+          {/* <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full bg-black/40">
             <Text color="white" size={20}>🖼️</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
       </View>

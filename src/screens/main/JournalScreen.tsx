@@ -1,5 +1,5 @@
-import { View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { format, eachDayOfInterval, endOfMonth, startOfMonth, parse } from 'date-fns';
+import { View, SafeAreaView, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { format, eachDayOfInterval, endOfMonth, startOfMonth, parse, isSameDay } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import Text from 'components/CustomText';
 import { useEffect, useState } from 'react';
@@ -8,8 +8,8 @@ import NavigationServices from 'services/NavigationServices';
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
 
 export default function JournalScreen() {
-  const nowWIBString = formatInTimeZone(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd HH:mm:ss');
-  const nowWIB = new Date(nowWIBString);
+  const [dateFilter, setDateFilter] = useState<any>(formatInTimeZone(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd HH:mm:ss'));
+  const nowWIB = new Date(dateFilter);
 
   const startOfMonthDate = startOfMonth(nowWIB);
   const endOfMonthDate = endOfMonth(nowWIB);
@@ -19,9 +19,9 @@ export default function JournalScreen() {
   const [nutritions, setNutritions] = useState<any>([]);
   const [userGoal, setUserGoal] = useState<any>({});
 
-  const getDailyNutritionData = async () => {
+  const getDailyNutritionData = async (date: any) => {
     const res: any = await getListNutritions({
-      target_date: format(nowWIB, 'yyyy-MM-dd'),
+      target_date: format(new Date(date), 'yyyy-MM-dd'),
     });
 
     if (res?.status == 401) {
@@ -83,10 +83,14 @@ export default function JournalScreen() {
     dayNumber: format(date, 'dd'),
     fullDate: date,
     isToday: format(date, 'yyyy-MM-dd') === format(nowWIB, 'yyyy-MM-dd'),
+    isSelected: isSameDay(date, dateFilter),
   }));
 
   useEffect(() => {
-    getDailyNutritionData();
+    getDailyNutritionData(dateFilter);
+  }, [dateFilter]);
+
+  useEffect(() => {
     getListNutritionsData();
     getUserGoalData();
   }, []);
@@ -109,7 +113,7 @@ export default function JournalScreen() {
     }
   };
 
-  const checkTotal = Math.min(dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories, 100) > 90;
+  const checkTotal = Math.min((dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) * 100, 100) > 90;
 
   return (
     <SafeAreaView className="flex-1 bg-[#FAFAFA]">
@@ -128,29 +132,30 @@ export default function JournalScreen() {
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mb-8">
           {monthDays.map((day, index) => (
-            <View 
+            <TouchableOpacity 
               key={index}
               className={`w-14 py-3 rounded-2xl items-center mr-3 border ${
-                day.isToday 
+                day.isSelected
                   ? 'bg-primary border-primary' 
                   : 'bg-[#E6F6FC]/50 border-gray-100'
               }`}
+              onPress={() => setDateFilter(day.fullDate)}
             >
               <Text 
                 size={12} 
                 type="medium" 
-                className={`mb-1 ${day.isToday ? '!text-white' : '!text-secondaryDark'}`}
+                className={`mb-1 ${day.isSelected ? '!text-white' : '!text-secondaryDark'}`}
               >
                 {day.dayName}
               </Text>
               <Text 
                 size={18} 
                 type="bold" 
-                className={day.isToday ? '!text-white' : '!text-dark'}
+                className={day.isSelected ? '!text-white' : '!text-dark'}
               >
                 {day.dayNumber}
               </Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
 
@@ -169,8 +174,8 @@ export default function JournalScreen() {
           <View className="flex-row justify-around mb-6 border-b border-gray-100 pb-5">
             {/* Protein */}
             <View className="items-center">
-              <View className="w-14 h-14 rounded-full border-4 border-[#006C49] justify-center items-center mb-2">
-                <Text size={12} type='bold' className="!text-dark">{Math.min(dailyNutrition?.nutrition_total?.protein_g / userGoal?.nutrition?.protein_g, 100)}%</Text>
+              <View className="w-[70px] h-[70px] rounded-full border-4 border-[#006C49] justify-center items-center mb-2">
+                <Text size={12} type='bold' className="!text-dark">{Math.min((dailyNutrition?.nutrition_total?.protein_g / userGoal?.nutrition?.protein_g) * 100, 100).toFixed(2)}%</Text>
               </View>
               <Text size={12} type='medium' className="!text-secondaryDark mb-0.5">Protein</Text>
               <Text size={14} type='bold' className="!text-dark">{userGoal?.nutrition?.protein_g?.toLocaleString('id-ID')}g</Text>
@@ -178,8 +183,8 @@ export default function JournalScreen() {
 
             {/* Karbo */}
             <View className="items-center">
-              <View className="w-14 h-14 rounded-full border-4 border-[#F59E0B] justify-center items-center mb-2">
-                <Text size={12} type='bold' className="!text-dark">{Math.min(dailyNutrition?.nutrition_total?.carb_g / userGoal?.nutrition?.carb_g, 100)}%</Text>
+              <View className="w-[70px] h-[70px] rounded-full border-4 border-[#F59E0B] justify-center items-center mb-2">
+                <Text size={12} type='bold' className="!text-dark">{Math.min((dailyNutrition?.nutrition_total?.carb_g / userGoal?.nutrition?.carb_g) * 100, 100).toFixed(2)}%</Text>
               </View>
               <Text size={12} type='medium' className="!text-secondaryDark mb-0.5">Karbo</Text>
               <Text size={14} type='bold' className="!text-dark">{userGoal?.nutrition?.carb_g?.toLocaleString('id-ID')}g</Text>
@@ -187,8 +192,8 @@ export default function JournalScreen() {
 
             {/* Lemak */}
             <View className="items-center">
-              <View className="w-14 h-14 rounded-full border-4 border-[#3B72C5] justify-center items-center mb-2">
-                <Text size={12} type='bold' className="!text-dark">{Math.min(dailyNutrition?.nutrition_total?.fat_g / userGoal?.nutrition?.fat_g, 100)}%</Text>
+              <View className="w-[70px] h-[70px] rounded-full border-4 border-[#3B72C5] justify-center items-center mb-2">
+                <Text size={12} type='bold' className="!text-dark">{Math.min((dailyNutrition?.nutrition_total?.fat_g / userGoal?.nutrition?.fat_g) * 100, 100).toFixed(2)}%</Text>
               </View>
               <Text size={12} type='medium' className="!text-secondaryDark mb-0.5">Lemak</Text>
               <Text size={14} type='bold' className="!text-dark">{userGoal?.nutrition?.fat_g?.toLocaleString('id-ID')}g</Text>
@@ -196,10 +201,10 @@ export default function JournalScreen() {
           </View>
 
           {/* Bottom Total Calories Sub-Row */}
-          <View className="flex-row justify-between items-center">
-            <View>
+          <View className="flex-row justify-between items-center py-2">
+            <View className='h-full'>
               <Text size={12} type='medium' className="!text-secondaryDark mb-0.5">Total Kalori</Text>
-              <Text size={20} type='bold' className="!text-primaryDark">{dailyNutrition?.nutrition_total?.calories?.toLocaleString('id-ID')} <Text className="text-xs font-normal text-secondaryDark">/ {userGoal?.nutrition?.calories?.toLocaleString('id-ID')} kcal</Text></Text>
+              <Text size={20} type='bold' className="!text-primaryDark">{dailyNutrition?.nutrition_total?.calories?.toLocaleString('id-ID')} <Text className="text-xs font-normal text-secondaryDark">/ {userGoal?.nutrition?.calories?.toLocaleString('id-ID')} Kalori</Text></Text>
             </View>
             <View className="w-10 h-10 bg-[#E6F6FC] rounded-xl items-center justify-center">
               <Text size={20}>🍴</Text>
@@ -213,7 +218,7 @@ export default function JournalScreen() {
 
         <View className="space-y-3 mb-28">
           {nutritions?.map((item: any) => {
-            const type = Math.min(dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) > 102 ? 'over' : Math.min(dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) < 90 ? 'under' : 'qualified';
+            const type = ((dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) * 100) > 102 ? 'over' : ((dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) * 100) < 90 ? 'under' : 'qualified';
             const icon = type == 'over' ? '🚨' : type == 'under' ? '⚠️' : '✅'; 
             const label = type == 'over' ? 'BERLEBIH' : type == 'under' ? 'DEFISIT' : 'CUKUP'; 
             const sublabel = type == 'over' ? 'Pantau asupanmu' : type == 'under' ? 'Butuh lebih banyak' : 'Tepat sasaran'; 
@@ -234,7 +239,7 @@ export default function JournalScreen() {
                     {format(parse(item?.date, 'yyyy-MM-dd', new Date()), 'dd MMMM yyyy')}
                   </Text>
                   <Text size={12} className="!text-secondaryDark">
-                    {item?.nutrition_total?.calories?.toLocaleString()} / {userGoal?.nutrition?.calories?.toLocaleString()} kcal
+                    {item?.nutrition_total?.calories?.toLocaleString()} / {userGoal?.nutrition?.calories?.toLocaleString()} Kalori
                   </Text>
                 </View>
               </View>

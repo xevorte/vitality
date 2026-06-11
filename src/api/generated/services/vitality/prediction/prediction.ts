@@ -33,7 +33,6 @@ formData.append(`file`, bodyPredictPredictPost.file);
 
       return vitalityServiceRequest<ApiResponse>(
       {url: `/predict/`, method: 'POST',
-      headers: {'Content-Type': 'multipart/form-data', },
        data: formData
     },
       options);

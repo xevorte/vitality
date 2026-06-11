@@ -132,6 +132,13 @@ const SessionActions = (set: any, get: any) => {
         })
       );
     },
+    setNutritions: (value: any) => {
+      set(
+        produce((state: SessionModel) => {
+          state.nutritions = value;
+        })
+      );
+    },
   };
 };
 

@@ -7,13 +7,24 @@ export const vitalityServiceRequest = async <T>(
   config: Omit<ApisauceConfig, 'baseURL'>,
   options?: ApisauceConfig
 ): Promise<ApiResponse<T>> => {
-  const { url, ...restOfConfig } = config;
+  const { url, headers, ...restOfConfig } = config;
   const prefixUrl = `/${url?.replace(/^\//, '')}`;
-  const response = await apisauce[config.method?.toLowerCase()](
+
+  const mergedOptions = {
+    ...(options || {}),
+    headers: {
+      ...(options?.headers || {}),
+      ...(headers || {}),
+    },
+  };
+
+  const method = config.method?.toLowerCase() || 'get';
+  const response = await apisauce[method](
     prefixUrl,
-    restOfConfig.data || restOfConfig.params,
-    options
+    restOfConfig.data ?? restOfConfig.params,
+    mergedOptions
   );
+
   return response;
 };
 

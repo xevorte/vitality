@@ -1,9 +1,10 @@
-import { View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Text from 'components/CustomText';
 import NavigationServices from 'services/NavigationServices';
 import { NAVIGATION_NAME } from 'navigation/NavigationName';
 import { useAuthStore } from 'stores/auth/AuthStore';
 import { useSessionStore } from 'stores/session/SessionStore';
+import User from 'assets/imgs/profile.png';
 
 export default function ProfileScreen() {
   const { logout } = useAuthStore();
@@ -25,14 +26,9 @@ export default function ProfileScreen() {
           {/* Avatar Container Stack */}
           <View className="relative mb-4">
             {/* Outer Ring Circle Placeholder */}
-            <View className="w-32 h-32 rounded-full bg-secondaryLightest border border-gray-200 overflow-hidden items-center justify-center">
-              {/* <Image source={require('./profile-picture.png')} className="w-full h-full" /> */}
+            <View className="w-32 h-32 rounded-full bg-primary/20 border border-primary overflow-hidden items-center justify-center">
+              <Image source={User} className="w-full h-full" />
             </View>
-            {/* Floating Camera Button Badge */}
-            <TouchableOpacity className="absolute bottom-0 right-1 w-9 h-9 bg-primaryDark rounded-full items-center justify-center border-2 border-white shadow-sm">
-              {/* ICON WADAH: Camera Shutter */}
-              <Text size={12} className="!text-white">📷</Text>
-            </TouchableOpacity>
           </View>
 
           {/* Name & Account Level Badge */}
@@ -41,7 +37,7 @@ export default function ProfileScreen() {
           </Text>
           <View className="bg-primaryLight border border-primary/10 px-4 py-1 rounded-full flex-row items-center">
             <Text size={12} className="!text-primary mr-1">⭐</Text>
-            <Text size={12} type='semibold' className="!text-primary">Member Vitality</Text>
+            <Text size={12} type='semibold' className="!text-primaryDark">Member Vitality</Text>
           </View>
         </View>
 
@@ -60,7 +56,7 @@ export default function ProfileScreen() {
                 <View className="w-10 h-10 bg-[#E6F6FC] rounded-full items-center justify-center mr-4">
                   <Text className="!text-tertiary">👤</Text>
                 </View>
-                <Text className="!text-dark">Ubah Data Diri</Text>
+                <Text type='semibold' className="!text-dark">Ubah Data Diri</Text>
               </View>
               <Text size={14} type='bold' className="!text-secondaryDark">›</Text>
             </TouchableOpacity>
@@ -115,7 +111,7 @@ export default function ProfileScreen() {
 
           {/* App Version Label */}
           <Text size={12} className="!text-secondaryDarkest mb-28">
-            Version 1.0.0
+            Version 0.7.0
           </Text>
         </View>
 

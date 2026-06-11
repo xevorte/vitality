@@ -16,6 +16,7 @@ export interface Profile {
 }
 
 interface SessionModel extends StoreModel {
+  nutritions: any;
   showGuideModal: boolean;
   profile?: Profile;
   predictNutrition: (params: BodyPredictPredictPost) => void;
@@ -26,6 +27,7 @@ interface SessionModel extends StoreModel {
   getUserGoal: () => void;
   setProfile: (data: Profile) => void;
   setShowGuideModal: (data: boolean) => void;
+  setNutritions: (data: any) => void;
 }
 
 export default SessionModel;

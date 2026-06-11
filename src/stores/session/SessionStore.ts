@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 import SessionActions from './SessionAction';
 
 const InitialStore = {
+  nutritions: [],
   showGuideModal: false,
   profile: undefined,
 };

@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { formatListWithAnd } from 'utils/useTextFormatting';
 
 export default function HomeScreen() {
-  const { profile, getUserGoal, getListNutritions, showGuideModal, setShowGuideModal } = useSessionStore();
+  const { profile, getUserGoal, getListNutritions, showGuideModal, setShowGuideModal, setNutritions } = useSessionStore();
   const [dailyNutrition, setDailyNutrition] = useState<any>({});
   const [userGoal, setUserGoal] = useState<any>({});
 
@@ -88,6 +88,7 @@ export default function HomeScreen() {
               <TouchableOpacity 
                 onPress={() => {
                   setShowGuideModal(false);
+                  setNutritions([]);
                   NavigationServices.push(NAVIGATION_NAME.MAIN.scanScreen, {});
                 }} 
                 className="w-full bg-primaryDark py-4 rounded-full items-center shadow-md shadow-primaryDark/20"
@@ -121,41 +122,41 @@ export default function HomeScreen() {
                 <Text size={12} type='medium' className="!text-006C49 mr-1">⇄ Ubah Target</Text>
               </TouchableOpacity>
               <Text size={30} type='bold' className="!text-dark">
-                {Math.max(0, (userGoal?.nutrition?.calories || 0) - (dailyNutrition?.nutrition_total?.calories || 0))} <Text size={14} className="!text-secondaryDark font-normal">kcal tersisa</Text>
+                {Math.max(0, (userGoal?.nutrition?.calories || 0) - (dailyNutrition?.nutrition_total?.calories || 0))} <Text size={14} className="!text-secondaryDark font-normal">Kalori Tersisa</Text>
               </Text>
             </View>
-            <View className={`w-20 h-20 rounded-full border-4 ${Math.min(dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories, 100) > 90 ? 'border-primary' : 'border-warning'} items-center justify-center relative`}>
-              <Text type='bold' className={Math.min(dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories, 100) > 90 ? '!text-primary' : '!text-warning'}>{Math.min((dailyNutrition?.nutrition_total?.calories || 0) / (userGoal?.nutrition?.calories || 0), 100)}%</Text>
+            <View className={`w-24 h-24 rounded-full border-4 ${Math.min((dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) * 100, 100) > 90 ? 'border-primary' : 'border-warning'} items-center justify-center relative`}>
+              <Text type='bold' className={Math.min((dailyNutrition?.nutrition_total?.calories / userGoal?.nutrition?.calories) * 100, 100) > 90 ? '!text-primary' : '!text-warning'}>{Math.min(((dailyNutrition?.nutrition_total?.calories || 0) / (userGoal?.nutrition?.calories || 0)) * 100, 100).toFixed(2)}%</Text>
             </View>
           </View>
           <View className="flex-1 flex-row gap-5 mt-4">
             {/* Protein */}
             <View className='flex-1'>
               <View className="flex-row justify-between mb-1">
-                <Text size={12} type='medium' className="!text-dark">Protein <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.protein_g}/{userGoal?.nutrition?.protein_g}g</Text></Text>
+                <Text size={12} type='medium' className="!text-dark">Protein <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.protein_g}/ {userGoal?.nutrition?.protein_g}g</Text></Text>
               </View>
               <View className="w-full h-1.5 bg-[#E6E6E6] rounded-full overflow-hidden">
-                <View style={{ width: `${Math.min(dailyNutrition?.nutrition_total?.protein_g / userGoal?.nutrition?.protein_g, 100)}%` }} className="h-full bg-primary" />
+                <View style={{ width: `${Math.min((dailyNutrition?.nutrition_total?.protein_g?.toFixed(1) / userGoal?.nutrition?.protein_g) * 100, 100)}%` }} className="h-full bg-primary" />
               </View>
             </View>
 
             {/* Carbs */}
             <View className='flex-1'>
               <View className="flex-row justify-between mb-1">
-                <Text size={12} type='medium' className="!text-dark">Karbo <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.carb_g}/{userGoal?.nutrition?.carb_g}g</Text></Text>
+                <Text size={12} type='medium' className="!text-dark">Karbo <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.carb_g?.toFixed(1)}/ {userGoal?.nutrition?.carb_g}g</Text></Text>
               </View>
               <View className="w-full h-1.5 bg-[#E6E6E6] rounded-full overflow-hidden">
-                <View style={{ width: `${Math.min(dailyNutrition?.nutrition_total?.carb_g / userGoal?.nutrition?.carb_g, 100)}%` }} className="h-full bg-primary" />
+                <View style={{ width: `${Math.min((dailyNutrition?.nutrition_total?.carb_g / userGoal?.nutrition?.carb_g) * 100, 100)}%` }} className="h-full bg-primary" />
               </View>
             </View>
 
             {/* Fats */}
             <View className='flex-1'>
               <View className="flex-row justify-between mb-1">
-                <Text size={12} type='medium' className="!text-dark">Lemak <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.fat_g}/{userGoal?.nutrition?.fat_g}g</Text></Text>
+                <Text size={12} type='medium' className="!text-dark">Lemak <Text size={12} className="text-secondaryDarkest font-normal">{dailyNutrition?.nutrition_total?.fat_g?.toFixed(1)}/ {userGoal?.nutrition?.fat_g}g</Text></Text>
               </View>
               <View className="w-full h-1.5 bg-[#E6E6E6] rounded-full overflow-hidden">
-                <View style={{ width: `${Math.min(dailyNutrition?.nutrition_total?.fat_g / userGoal?.nutrition?.fat_g, 100)}%` }} className="h-full bg-primary" />
+                <View style={{ width: `${Math.min((dailyNutrition?.nutrition_total?.fat_g / userGoal?.nutrition?.fat_g) * 100, 100)}%` }} className="h-full bg-primary" />
               </View>
             </View>
           </View>
@@ -174,13 +175,13 @@ export default function HomeScreen() {
           
           {/* Card Sarapan */}
           <View className={`w-full bg-white border ${dailyNutrition?.category?.breakfast?.food?.length <= 0 ? 'border-dashed' : ''} border-[#E2E8F0] p-4 rounded-2xl flex-row items-center justify-between mb-3 shadow-sm`}>
-            <View className="flex-row items-center flex-1">
+            <View className="flex-row flex-wrap items-center flex-1">
               <View className="w-12 h-12 bg-warning/10 rounded-xl items-center justify-center mr-4">
                 <Text size={20}>☀️</Text>
               </View>
               <View className="flex-1">
                 <Text type='bold' className="!text-dark mb-0.5">Sarapan</Text>
-                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.breakfast?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.breakfast?.food)} • ${dailyNutrition?.category?.breakfast?.nutrition_total?.calories} kcal` : 'Belum ada data'}</Text>
+                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.breakfast?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.breakfast?.food?.map((e: any) => e?.food_name))} • ${dailyNutrition?.category?.breakfast?.nutrition_total?.calories} Kalori` : 'Belum ada data'}</Text>
               </View>
             </View>
             <TouchableOpacity className="bg-primary rounded-full items-center justify-center pt-1 pb-1.5 px-3" onPress={() => NavigationServices.push(NAVIGATION_NAME.MAIN.goalDetailScreen, {
@@ -192,13 +193,13 @@ export default function HomeScreen() {
 
           {/* Card Makan Siang */}
           <View className={`w-full bg-white border ${dailyNutrition?.category?.lunch?.food?.length <= 0 ? 'border-dashed' : ''} border-[#E2E8F0] p-4 rounded-2xl flex-row items-center justify-between mb-3 shadow-sm`}>
-            <View className="flex-row items-center flex-1">
+            <View className="flex-row flex-wrap items-center flex-1">
               <View className="w-12 h-12 bg-danger/10 rounded-xl items-center justify-center mr-4">
                 <Text className="text-xl">🌤️</Text>
               </View>
               <View className="flex-1">
                 <Text type='bold' className="!text-dark mb-0.5">Makan Siang</Text>
-                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.lunch?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.lunch?.food)} • ${dailyNutrition?.category?.lunch?.nutrition_total?.calories} kcal` : 'Belum ada data'}</Text>
+                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.lunch?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.lunch?.food?.map((e: any) => e?.food_name))} • ${dailyNutrition?.category?.lunch?.nutrition_total?.calories} Kalori` : 'Belum ada data'}</Text>
               </View>
             </View>
             <TouchableOpacity className="bg-primary rounded-full items-center justify-center pt-1 pb-1.5 px-3" onPress={() => NavigationServices.push(NAVIGATION_NAME.MAIN.goalDetailScreen, {
@@ -210,13 +211,13 @@ export default function HomeScreen() {
 
           {/* Card Makan Malam (Kosong) */}
           <View className={`w-full bg-white border ${dailyNutrition?.category?.dinner?.food?.length <= 0 ? 'border-dashed' : ''} border-[#E2E8F0] p-4 rounded-2xl flex-row items-center justify-between mb-3 shadow-sm`}>
-            <View className="flex-row items-center flex-1">
+            <View className="flex-row flex-wrap items-center flex-1">
               <View className="w-12 h-12 bg-secondaryLightest rounded-xl items-center justify-center mr-4">
                 <Text className="text-xl">🌙</Text>
               </View>
               <View className="flex-1">
                 <Text type='bold' className="!text-dark mb-0.5">Makan Malam</Text>
-                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.dinner?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.dinner?.food)} • ${dailyNutrition?.category?.dinner?.nutrition_total?.calories} kcal` : 'Belum ada data'}</Text>
+                <Text size={12} className="!text-secondaryDark">{dailyNutrition?.category?.dinner?.food?.length > 0 ? `${formatListWithAnd(dailyNutrition?.category?.dinner?.food?.map((e: any) => e?.food_name))} • ${dailyNutrition?.category?.dinner?.nutrition_total?.calories} Kalori` : 'Belum ada data'}</Text>
               </View>
             </View>
             <TouchableOpacity className="bg-primary rounded-full items-center justify-center pt-1 pb-1.5 px-3" onPress={() => NavigationServices.push(NAVIGATION_NAME.MAIN.goalDetailScreen, {
